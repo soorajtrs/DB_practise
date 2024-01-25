@@ -54,19 +54,40 @@ display(aws_df)
 
 # COMMAND ----------
 
+df = spark.read.format("csv").option("header", True).load("s3://db-tesing-data/ElectronicsData.csv")
+ 
+df.show(1)
 
 
 # COMMAND ----------
 
-
+# MAGIC %sql
+# MAGIC create database if not exists Demo_lake;
+# MAGIC show databases;
+# MAGIC use demo_lake;
+# MAGIC show tables;
 
 # COMMAND ----------
 
-
+df.write.format('delta').mode('overwrite').saveAsTable('demo_lake.delta_1')
 
 # COMMAND ----------
 
+# MAGIC %sql
+# MAGIC show databases;
+# MAGIC use demo_lake;
+# MAGIC show tables;
+# MAGIC show create table delta_1; 
+# MAGIC select * from delta_1 limit 10;
 
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC show databases;
+# MAGIC use demo_lake;
+# MAGIC  
+# MAGIC update delta_1 set Discount = '50% discount' where subcategory='Batteries'  ;
+# MAGIC select * from delta_1 limit 10;
 
 # COMMAND ----------
 
